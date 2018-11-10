@@ -8,6 +8,10 @@ var mongoose = require('mongoose');
 var app = express();
 
 
+// Importar rutas
+var appRoutes = require('./routes/app');
+var usuarioRoutes = require('./routes/usuario');
+
 
 // conection a la base de datos
 mongoose.connection.openUri('mongodb://127.0.0.1:27017/hospitalDB', (err, res) => {
@@ -18,24 +22,13 @@ mongoose.connection.openUri('mongodb://127.0.0.1:27017/hospitalDB', (err, res) =
 });
 
 
-
-// Rutas
-app.get('/', (req, res, next) => {
-
-    res.status(200).json({
-        ok: true,
-        mensaje: 'Peticion realizada correctamente'
-    });
-
-});
+// midelwhere — se ejecuta antes de que se resuelvan otras rutas
+app.use('/usuario', usuarioRoutes); // se define arriba porque sino se colocarian abajo
+app.use('/', appRoutes);
 
 
 // color consola
 var cverde = '\x1b[32m%s\x1b[0m';
-
-
-
-
 
 
 // Escuchar peticiones
