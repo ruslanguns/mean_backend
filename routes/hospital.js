@@ -1,10 +1,6 @@
 var express = require('express');
-var jwt = require('jsonwebtoken');
-
 
 var mdAutenticacion = require('../middlewares/autenticacion');
-
-
 
 // inicializarlo
 var app = express();
@@ -66,6 +62,7 @@ app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
         }
 
         hospital.nombre = body.nombre;
+        hospital.usuario = req.usuario._id;
 
         hospital.save((err, hospitalGuardado) => {
             if (err) {
@@ -94,7 +91,9 @@ app.post('/', mdAutenticacion.verificaToken, (req, res) => {
 
     var hospital = new Hospital({
         nombre: body.nombre,
-        img: body.img
+        img: body.img,
+        usuario: req.usuario._id,
+
     });
 
     // aqui mostramos como guaradar al usuario...
@@ -110,8 +109,7 @@ app.post('/', mdAutenticacion.verificaToken, (req, res) => {
 
         res.status(201).json({
             ok: true,
-            hospital: hospitalGuardado,
-            usuarioToken: req.usuario
+            hospital: hospitalGuardado
         });
     });
 });
