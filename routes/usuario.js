@@ -3,7 +3,9 @@ var bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
 
 
-var SEED = require('../config/config').SEED;
+var mdAutenticacion = require('../middlewares/autenticacion');
+
+// var SEED = require('../config/config').SEED;
 
 // inicializarlo
 var app = express();
@@ -16,7 +18,7 @@ var Usuario = require('../models/usuario');
 // ====================================
 // GET — API Obtener todos los usuarios
 // ==================================== 
-app.get('/', (req, res, next) => {
+app.get('/', mdAutenticacion.verificaToken, (req, res, next) => {
 
     Usuario.find({}, 'nombre email img role')
         .exec(
@@ -38,30 +40,9 @@ app.get('/', (req, res, next) => {
 });
 
 // ====================================
-// VERIFICAR TOKEN — API  Midleware
-// ====================================
-app.use('/', (req, res, next) => {
-
-    var token = req.query.token;
-
-    jwt.verify(token, SEED, (err, decoded) => {
-
-        if (err) {
-            return res.status(401).json({
-                ok: false,
-                mensaje: 'El token es inválido',
-                errors: err
-            });
-        }
-
-        next();
-    });
-});
-
-// ====================================
 // PUT — API Actualizar usuario
 // ====================================
-app.put('/:id', (req, res) => {
+app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
 
     var id = req.params.id;
     var body = req.body;
@@ -111,7 +92,7 @@ app.put('/:id', (req, res) => {
 // ====================================
 // POST — API Crear un nuevo usuario
 // ====================================
-app.post('/', (req, res) => {
+app.post('/', mdAutenticacion.verificaToken, (req, res) => {
 
     var body = req.body;
 
@@ -136,7 +117,8 @@ app.post('/', (req, res) => {
 
         res.status(201).json({
             ok: true,
-            usuario: usuarioGuardado
+            usuario: usuarioGuardado,
+            usuarioToken: req.usuario
         });
     });
 });
@@ -144,7 +126,7 @@ app.post('/', (req, res) => {
 // ====================================
 // DELETE — API Borrar a un usuario
 // ====================================
-app.delete('/:id', (req, res) => {
+app.delete('/:id', mdAutenticacion.verificaToken, (req, res) => {
 
     var id = req.params.id;
 
