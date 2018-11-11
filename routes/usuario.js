@@ -85,9 +85,7 @@ app.put('/:id', (req, res) => {
     //     ok: 200,
     //     id: id
     // });
-
 });
-
 
 // ====================================
 // POST — API Crear un nuevo usuario
@@ -120,8 +118,39 @@ app.post('/', (req, res) => {
             usuario: usuarioGuardado
         });
     });
-
-
 });
+
+// ====================================
+// DELETE — API Borrar a un usuario
+// ====================================
+app.delete('/:id', (req, res) => {
+
+    var id = req.params.id;
+
+    Usuario.findByIdAndRemove(id, (err, usuarioBorrado) => {
+
+        if (err) {
+            return res.status(500).json({
+                ok: false,
+                mensaje: 'Error borrar usuario',
+                errors: err
+            });
+        }
+
+        if (!usuarioBorrado) {
+            return res.status(400).json({
+                ok: false,
+                mensaje: 'No existe un usuario con ese ID',
+                errors: { message: 'No existe un usuario con ese ID' }
+            });
+        }
+
+        res.status(200).json({
+            ok: true,
+            usuario: usuarioBorrado
+        });
+    });
+});
+
 
 module.exports = app;
