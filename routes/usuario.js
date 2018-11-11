@@ -1,5 +1,9 @@
 var express = require('express');
 var bcrypt = require('bcryptjs');
+var jwt = require('jsonwebtoken');
+
+
+var SEED = require('../config/config').SEED;
 
 // inicializarlo
 var app = express();
@@ -31,6 +35,27 @@ app.get('/', (req, res, next) => {
                     usuarios: usuarios
                 });
             });
+});
+
+// ====================================
+// VERIFICAR TOKEN — API  Midleware
+// ====================================
+app.use('/', (req, res, next) => {
+
+    var token = req.query.token;
+
+    jwt.verify(token, SEED, (err, decoded) => {
+
+        if (err) {
+            return res.status(401).json({
+                ok: false,
+                mensaje: 'El token es inválido',
+                errors: err
+            });
+        }
+
+        next();
+    });
 });
 
 // ====================================
@@ -80,12 +105,8 @@ app.put('/:id', (req, res) => {
             });
         });
     });
-
-    // res.status(200).json({ // prueba
-    //     ok: 200,
-    //     id: id
-    // });
 });
+
 
 // ====================================
 // POST — API Crear un nuevo usuario

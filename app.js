@@ -42,5 +42,5 @@ var cverde = '\x1b[32m%s\x1b[0m';
 
 // Escuchar peticiones
 app.listen(3000, () => {
-    console.log(`El servidor Express esta corriendo en el puerto 3001: ${ cverde }`, 'Online');
+    console.log(`El servidor Express esta corriendo en el puerto 3000: ${ cverde }`, 'Online');
 });
