@@ -15,7 +15,14 @@ var Medico = require('../models/medico');
 // ====================================
 app.get('/', (req, res, next) => {
 
+    var desde = req.query.desde || 0; // si viene un parametro, sino es cero
+    desde = Number(desde);
+
     Medico.find({}, 'nombre img usuario hospital')
+        .skip(desde)
+        .limit(5)
+        .populate('usuario', 'nombre email')
+        .populate('hospital')
         .exec(
             (err, medico) => {
 
@@ -27,10 +34,15 @@ app.get('/', (req, res, next) => {
                     });
                 }
 
-                res.status(200).json({
-                    ok: true,
-                    medico: medico
+                Medico.countDocuments({}, (err, conteo) => {
+
+                    res.status(200).json({
+                        ok: true,
+                        medico: medico,
+                        total: conteo
+                    });
                 });
+
             });
 });
 
