@@ -34,6 +34,16 @@ mongoose.connection.openUri('mongodb://localhost:27017/hospitalDB', { useNewUrlP
     console.log(`La base de datos ${ cverde }`, 'Online');
 });
 
+
+// Server index config — GESTOR DE ARCHIVOS se prueba ingresando al localhost:3000/uploads
+////////////////////////////////////////
+/*
+var serverIndex = require('serve-index');
+app.use(express.static(__dirname + '/'))
+app.use('/uploads', serverIndex(__dirname + '/uploads'));
+*/
+
+
 // RUTAS
 // midelwhere — se ejecuta antes de que se resuelvan otras rutas
 app.use('/usuario', usuarioRoutes); // se define arriba porque sino se colocarian abajo
