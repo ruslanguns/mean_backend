@@ -23,7 +23,7 @@ app.get('/', (req, res, next) => {
     var desde = req.query.desde || 0; // si viene un parametro, sino es cero
     desde = Number(desde);
 
-    Usuario.find({}, 'nombre email img role')
+    Usuario.find({}, 'nombre email img role google')
         .skip(desde)
         .limit(5) // para paginacion
         .exec(
@@ -103,7 +103,8 @@ app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
 // ====================================
 // POST — API Crear un nuevo usuario
 // ====================================
-app.post('/', mdAutenticacion.verificaToken, (req, res) => {
+// app.post('/', mdAutenticacion.verificaToken, (req, res) => {
+app.post('/', (req, res) => {
 
     var body = req.body;
 

@@ -8,6 +8,7 @@ var fs = require('fs');
 var Usuario = require('../models/usuario');
 var Medico = require('../models/medico');
 var Hospital = require('../models/hospital');
+var Settings = require('../models/settings');
 
 
 // ====================================
@@ -29,12 +30,14 @@ app.put('/:tipo/:id', (req, res, next) => {
 
     // Tipos de coleccion
     ////////////////////////////////////////
-    var tiposValidos = ['hospitales', 'medicos', 'usuarios'];
+    var tiposValidos = ['hospitales', 'medicos', 'usuarios', 'settings'];
     if (tiposValidos.indexOf(tipo) < 0) {
         return res.status(400).json({
             ok: false,
             mensaje: 'Tipo de coleccion no es valida',
-            errors: { message: 'Tipo de coleccion no es valida' }
+            errors: {
+                message: 'Tipo de coleccion no es valida'
+            }
         });
     }
 
@@ -42,7 +45,9 @@ app.put('/:tipo/:id', (req, res, next) => {
         return res.status(400).json({
             ok: false,
             mensaje: 'No se selecciono nada',
-            errors: { message: 'Debe de seleccionar una imagen' }
+            errors: {
+                message: 'Debe de seleccionar una imagen'
+            }
         });
     }
 
@@ -61,7 +66,9 @@ app.put('/:tipo/:id', (req, res, next) => {
         return res.status(400).json({
             ok: false,
             mensaje: 'Extension no válida',
-            errors: { message: 'Las extensiones válidas son ' + 'jpeg, git, jpg, png' }
+            errors: {
+                message: 'Las extensiones válidas son ' + 'jpeg, git, jpg, png'
+            }
         });
     }
 
@@ -103,7 +110,9 @@ function subirPorTipo(tipo, id, nombreArchivo, res) {
                 return res.status(400).json({
                     ok: true,
                     mensaje: 'Usuario no existe',
-                    errors: { message: 'Usuario no existe' }
+                    errors: {
+                        message: 'Usuario no existe'
+                    }
                 });
             }
 
@@ -142,7 +151,9 @@ function subirPorTipo(tipo, id, nombreArchivo, res) {
                 return res.status(400).json({
                     ok: true,
                     mensaje: 'Medico no existe',
-                    errors: { message: 'Medico no existe' }
+                    errors: {
+                        message: 'Medico no existe'
+                    }
                 });
             }
 
@@ -178,7 +189,9 @@ function subirPorTipo(tipo, id, nombreArchivo, res) {
                 return res.status(400).json({
                     ok: true,
                     mensaje: 'Hospital no existe',
-                    errors: { message: 'Hospital no existe' }
+                    errors: {
+                        message: 'Hospital no existe'
+                    }
                 });
             }
 
@@ -198,6 +211,45 @@ function subirPorTipo(tipo, id, nombreArchivo, res) {
                     ok: true,
                     mensaje: 'Imagen del hospital actualizada',
                     hospital: hospitalActualizado
+                });
+
+            });
+
+        });
+    }
+
+
+    if (tipo === 'settings') {
+        // necesitamos el modelo
+        Settings.findById(id, (err, settings) => {
+
+
+            if (!settings) {
+                return res.status(400).json({
+                    ok: true,
+                    mensaje: 'Setting no existe',
+                    errors: {
+                        message: 'Setting no existe'
+                    }
+                });
+            }
+
+            var pathViejo = './uploads/setttings/' + settings.logo;
+
+            // si existe elimina la imagen anterior
+            if (fs.existsSync(pathViejo)) {
+                fs.unlink(pathViejo);
+            }
+
+
+            settings.logo = nombreArchivo;
+
+            settings.save((err, settingsActualizado) => {
+
+                return res.status(200).json({
+                    ok: true,
+                    mensaje: 'El logo ha sido actualizado',
+                    hospital: settingsActualizado
                 });
 
             });

@@ -158,4 +158,38 @@ app.delete('/:id', mdAutenticacion.verificaToken, (req, res) => {
     });
 });
 
+// ====================================
+// OBTENER HOSPITAL POR ID
+// ====================================
+app.get('/:id', (req, res) => {
+
+    var id = req.params.id;
+
+    Hospital.findById(id)
+        .populate('usuario', 'nombre img email')
+        .exec((err, hospital) => {
+
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    mensaje: 'Error al buscar el hospital',
+                    errors: err
+                });
+            }
+
+            if (!hospital) {
+                return red.status(400).json({
+                    ok: false,
+                    mensaje: 'El hospital con el id ' + id + ' no existe',
+                    errors: { message: 'No existe un hospital con ese ID' }
+                });
+            }
+
+            return res.status(200).json({
+                ok: true,
+                hospital: hospital
+            });
+        });
+});
+
 module.exports = app;
