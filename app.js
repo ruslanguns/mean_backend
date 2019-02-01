@@ -67,6 +67,9 @@ var busquedaRoutes = require('./routes/busqueda');
 var uploadRoutes = require('./routes/upload');
 var imagenesRoutes = require('./routes/imagenes');
 var settingsRoutes = require('./routes/settings');
+// mailing routes
+var mailRoutes = require('./routes/mail');
+var resetPassRoutes = require('./routes/resetpass');
 
 
 // ====================================
@@ -88,11 +91,17 @@ mongoose.connection.openUri('mongodb://localhost:27017/hospitalDB', {
 // ====================================
 
 // var mongodbUri = 'mongodb://@ds227654.mlab.com:27654/ruslan';
+// var mongodbUri = 'mongodb://ds127624.mlab.com:27624/hospitaldb';
+// // mongoose.connect(mongodbUri, {
 // mongoose.connect(mongodbUri, {
 //     useNewUrlParser: true,
+//     // auth: {
+//     //     user: 'ruslan',
+//     //     password: 'Ruslan123'
+//     // }
 //     auth: {
-//         user: 'ruslan',
-//         password: 'Ruslan123$'
+//         user: 'jcarlos2',
+//         password: '101066jcarlos'
 //     }
 // })
 // var conn = mongoose.connection;
@@ -114,6 +123,8 @@ app.use('/uploads', serverIndex(__dirname + '/uploads'));
 
 // RUTAS
 // midelwhere — se ejecuta antes de que se resuelvan otras rutas
+app.use('/mail', mailRoutes);
+app.use('/resetpass', resetPassRoutes);
 app.use('/settings', settingsRoutes);
 app.use('/usuario', usuarioRoutes); // se define arriba porque sino se colocarian abajo
 app.use('/login', loginRoutes);

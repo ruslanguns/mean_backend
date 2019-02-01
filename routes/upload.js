@@ -160,8 +160,9 @@ function subirPorTipo(tipo, id, nombreArchivo, res) {
             var pathViejo = './uploads/medicos/' + medico.img;
 
             // si existe elimina la imagen anterior
-            if (fs.existsSync(pathViejo)) {
-                fs.unlink(pathViejo);
+            if (fs.existsSync(pathViejo) &&
+                medico.img.length > 0) {
+                fs.unlinkSync(pathViejo);
             }
 
 

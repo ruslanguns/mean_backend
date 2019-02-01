@@ -47,6 +47,32 @@ app.get('/', (req, res, next) => {
 });
 
 // ====================================
+// Obtener un medico por ID
+// ====================================
+app.get('/:id', (req, res) => {
+
+    var id = req.params.id;
+
+    Medico.findById(id)
+        .populate('usuario', 'nombre email img')
+        .populate('hospital')
+        .exec((err, medico) => {
+            if (err) {
+                return res.status(400).json({
+                    ok: false,
+                    mensaje: 'El médico con el id ' + id + ' no existe',
+                    errors: { message: 'No existe un medico con ese ID' }
+                });
+            }
+
+            res.status(200).json({
+                ok: true,
+                medico: medico
+            });
+        });
+});
+
+// ====================================
 // PUT — Actualizar / Modificar a un médico
 // ====================================
 app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
