@@ -233,6 +233,14 @@ function obtenerMenu(ROLE) {
                 { titulo: 'Médicos', url: '/medicos' },
 
             ]
+        },
+        {
+            titulo: 'Librerias',
+            icono: 'mdi mdi-archive',
+            submenu: [
+                { titulo: 'Anartz - Openweather', url: '/librerias/openweather' },
+
+            ]
         }
     ];
 
